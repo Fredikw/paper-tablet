@@ -25,14 +25,3 @@ def format_detectMarkers_corners(corners):
             arr[arr_idx] = corner
             arr_idx += 1
     return arr
-
-# from argparse import ArgumentParser
-# import cv2
-
-# # Pass image as command line argument
-# parser = ArgumentParser()
-# parser.add_argument("-i", "--image", required=True,
-# 	help="path to input image containing ArUCo tag")
-# args = vars(parser.parse_args())
-
-# image = cv2.imread(args["image"])
