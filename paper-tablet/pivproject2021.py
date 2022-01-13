@@ -5,7 +5,8 @@ import os
 from os import listdir, getcwd
 from argparse import ArgumentParser
 
-# python .\pivproject2021.py 1 "/templates/template1_manyArucos.png" "output_folder" "/dataset_task1" 4
+# Run the command
+# $python .\pivproject2021.py 1 "/templates/template1_manyArucos.png" "output_folder" "/dataset_task1" 4
 
 
 '''
@@ -33,21 +34,23 @@ if args["task"] == "1":
 
     img_folder = args["arg1"]
 
-    for image in listdir(getcwd() + img_folder):
+    for image_name in listdir(getcwd() + img_folder):
 
-        img2 = cv2.imread(getcwd() + img_folder + "/" + image)
+        img2 = cv2.imread(getcwd() + img_folder + "/" + image_name)
 
         '''
         Find corresponding ArUco markers in images
 
         '''
 
+        # Defining ArUco dictionary and parameters used for detection
         aruco_dict  = cv2.aruco.Dictionary_get(cv2.aruco.DICT_7X7_50)
         arucoParams = cv2.aruco.DetectorParameters_create()
 
         corners_img1, ids_img1, rejected_img1 = cv2.aruco.detectMarkers(img1, aruco_dict, parameters=arucoParams)
         corners_img2, ids_img2, rejected_img2 = cv2.aruco.detectMarkers(img2, aruco_dict, parameters=arucoParams)
 
+        # Formatting marker corner points
         corners_img1 = utils.sort_markers(ids_img1, corners_img1)
         corners_img2 = utils.sort_markers(ids_img2, corners_img2)
         destpts      = utils.format_detectMarkers_corners(corners_img1)
@@ -60,12 +63,12 @@ if args["task"] == "1":
 
         M, mask = cv2.findHomography(srcpts, destpts)
 
-        tf_img = cv2.warpPerspective(img2, M, (2339, 1654))
+        # Transforming input image
+        tf_img = cv2.warpPerspective(img2, M, (img1.shape[1], img1.shape[0]))
 
         '''
         Displaying images
 
-        TODO reshape image to fit on screen
         '''
 
         # cv2.imshow('frame', img2)
@@ -78,4 +81,16 @@ if args["task"] == "1":
         '''
 
         path = args["path_to_output_folder"]
-        cv2.imwrite(os.path.join(path , "tf_" + image), tf_img)
+        cv2.imwrite(os.path.join(path , "tf_" + image_name), tf_img)
+
+
+if args["task"] == "2":
+    pass
+
+
+if args["task"] == "3":
+    pass
+
+
+if args["task"] == "4":
+    pass
