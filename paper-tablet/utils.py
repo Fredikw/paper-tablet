@@ -17,7 +17,7 @@ def format_detectMarkers_corners(corners):
     entries = 32
     dim     = 2
 
-    arr = np.empty([entries, dim])
+    arr = np.empty([entries, dim], dtype="float32")
     arr_idx = 0
     for mark in corners:
         for corner in mark[0]:
