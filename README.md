@@ -9,3 +9,5 @@ showing nothing else than the paper.
 https://www.educba.com/opencv-perspectivetransform/
 
 https://docs.opencv.org/4.x/d1/de0/tutorial_py_feature_homography.html
+
+https://www.pyimagesearch.com/2020/12/21/detecting-aruco-markers-with-opencv-and-python/
