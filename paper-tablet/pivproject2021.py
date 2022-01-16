@@ -122,7 +122,7 @@ if args["task"] == "2":
     # store all the good matches as per Lowe's ratio test.
     good = []
     for m,n in matches:
-        if m.distance < 0.7*n.distance:                    # if m.distance < 0.7*n.distance:
+        if m.distance < 0.6*n.distance:                    # if m.distance < 0.7*n.distance:
             good.append(m)                                  # Result in 19 matches
 
     # Extract coordinates of matches found
@@ -133,11 +133,17 @@ if args["task"] == "2":
     # M, mask = cv2.findHomography(src_pts, dst_pts)
     M, mask = cv2.findHomography(dst_pts, src_pts, cv2.RANSAC,5.0)
 
-    # tf_img = cv2.warpPerspective(img2, M, (img1.shape[1], img1.shape[0]))
+    tf_img = cv2.warpPerspective(img2, M, (img1.shape[1], img1.shape[0]))
 
-    # path = getcwd() + "\output_folder"
+    path = getcwd() + "\output_folder"
 
-    # cv2.imwrite(os.path.join(path , "tf_" + "rgb4237.jpg"), tf_img)
+    cv2.imwrite(os.path.join(path , "tf_" + "rgb4237.jpg"), tf_img)
+
+    # cv2.imshow('template', img1)
+    # cv2.imshow('input', img2)
+    # cv2.imshow('output', tf_img)
+    # cv2.waitKey(0)
+
 
     matchesMask = mask.ravel().tolist()
     h,w, d = img1.shape
@@ -152,10 +158,14 @@ if args["task"] == "2":
     img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
     plt.imshow(img3, 'gray'),plt.show()
 
+    path = getcwd() + "\output_folder"    
+    cv2.imwrite(os.path.join(path , "tf_" + "rgb4237.jpg"), tf_img)
 
-# if args["task"] == "3":
-#     pass
 
 
-# if args["task"] == "4":
-#     pass
+if args["task"] == "3":
+    pass
+
+
+if args["task"] == "4":
+    pass
