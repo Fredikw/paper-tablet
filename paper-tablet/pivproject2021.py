@@ -6,11 +6,12 @@ import numpy as np
 from os import listdir, getcwd
 from argparse import ArgumentParser
 from matplotlib import pyplot as plt
+from skimage.metrics import structural_similarity as compare_ssim
 
 
 # # Run the command
 # # $python .\pivproject2021.py 1 "/templates/template1_manyArucos.png" "output_folder" "/dataset_task1" 4
-# # $python .\pivproject2021.py 2 "/templates/template_glass.jpg" "output_folder" "/dataset_task2" 4
+# # $python .\pivproject2021.py 2 "/templates/template2_fewArucos.png" "output_folder" "/dataset_task2" 4
 
 '''
 Command line arguments
@@ -26,9 +27,10 @@ Command line arguments
 
 # args = vars(parser.parse_args())
 
-# For testing
+# For testing, comment out line 21-26
 args = {
-  "task": ""
+  "task": "",
+  "path_to_output_folder" : ""
 }
 args["task"] = "3"
 
@@ -121,7 +123,7 @@ if args["task"] == "2":
         matches       = flann.knnMatch(des1,des2,k=2)
 
         # store all the good matches
-        good = [m for m,n in matches if (m.distance < 0.99*n.distance)]
+        good = [m for m,n in matches if (m.distance < 0.9*n.distance)]
 
         # Extract coordinates of matches found
         src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
@@ -132,7 +134,7 @@ if args["task"] == "2":
 
         '''
 
-        M, mask = cv2.findHomography(dst_pts, src_pts, cv2.RANSAC,8.0)
+        M, mask = cv2.findHomography(dst_pts, src_pts, cv2.RANSAC,5.0)
 
         tf_img = cv2.warpPerspective(img2, M, (img1.shape[1], img1.shape[0]))
 
@@ -159,14 +161,70 @@ if args["task"] == "2":
         # img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
         # plt.imshow(img3, 'gray'),plt.show()
 
+'''
+Approach based on ...
 
+'''
 
 if args["task"] == "3":
     
-    img1 = cv2.imread(getcwd() + "dataset_task3_1/rgb_0586.jpg")
-    img2 = cv2.imread(getcwd() + "dataset_task3_2/rgb_0863.jpg")
+    img_temp = cv2.imread(getcwd() + "/templates/template2_fewArucos.png")
+    img1     = cv2.imread(getcwd() + "/dataset_task3_1/rgb_0586.jpg")
+    img2     = cv2.imread(getcwd() + "/dataset_task3_2/rgb_0863.jpg")
+
+    tf_img1 = utils.task2(img_temp, img1)
+    tf_img2 = utils.task2(img_temp, img2)
+
+    '''
+    Converting to gray scale image
+
+    '''
+    img_temp    = cv2.cvtColor(img_temp, cv2.COLOR_BGR2GRAY)
+    gray_img_1  = cv2.cvtColor(tf_img1, cv2.COLOR_BGR2GRAY)
+    gray_img_2  = cv2.cvtColor(tf_img2, cv2.COLOR_BGR2GRAY)
+
+    '''
+    Normalize image
+
+    '''
+    gray_img_1_norm = np.zeros((img_temp.shape[0],img_temp.shape[1]))
+    gray_img_2_norm = np.zeros((img_temp.shape[0],img_temp.shape[1]))
+
+    gray_img_1_norm = cv2.normalize(gray_img_1, gray_img_1_norm, 0, 255, cv2.NORM_MINMAX)
+    gray_img_2_norm = cv2.normalize(gray_img_2, gray_img_2_norm, 0, 255, cv2.NORM_MINMAX)
 
 
+    '''
+    Comparing images
+    
+    '''
+    # # Comparing images using Structural Similarity Index (SSIM)
+    # score_img1, diff_img1 = compare_ssim(img_temp, gray_img_1, full=True)
+    # score_img2, diff_img2 = compare_ssim(img_temp, gray_img_2, full=True)
 
-if args["task"] == "4":
-    pass
+    # print("SSIM: {}".format(score_img1))
+    # print("SSIM: {}".format(score_img2))
+
+    # # Comparing images using Mean Squared Error
+    err1 = np.sum((gray_img_1_norm.astype("float") - img_temp.astype("float")) ** 2)
+    err1 /= float(gray_img_1_norm.shape[0] * gray_img_1_norm.shape[1])
+
+    err2 = np.sum((gray_img_2_norm.astype("float") - img_temp.astype("float")) ** 2)
+    err2 /= float(gray_img_2_norm.shape[0] * gray_img_2_norm.shape[1])
+
+    print(err1)
+    print(err2)
+
+    '''
+    Save images
+
+    '''
+
+    # if err1 < err2:
+    #     to_be_saved = tf_img1
+    # else:
+    #     to_be_saved = tf_img2
+    
+    # # Define image name
+    # path = args["path_to_output_folder"] # = "output_folder3"
+    # cv2.imwrite(os.path.join(path , image_name), to_be_saved)
