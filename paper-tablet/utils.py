@@ -1,5 +1,5 @@
 import numpy as np
-
+import cv2
 # Sort corners by id
 # id and courner correspond on index
 def sort_markers(ids, corners):
@@ -25,3 +25,7 @@ def format_detectMarkers_corners(corners):
             arr[arr_idx] = corner
             arr_idx += 1
     return arr
+
+
+def save_image(img_name, img, path):
+    cv2.imwrite(os.path.join(path , "tf_" + img_name), img)

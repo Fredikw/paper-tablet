@@ -17,21 +17,20 @@ Command line arguments
 
 '''
 
-parser = ArgumentParser()
-parser.add_argument("task")
-parser.add_argument("path_to_template")         # "templates/template1_manyArucos.png"
-parser.add_argument("path_to_output_folder")
-parser.add_argument("arg1")                     # "/dataset_task1"
-parser.add_argument("arg2")
+# parser = ArgumentParser()
+# parser.add_argument("task")
+# parser.add_argument("path_to_template")         # "templates/template1_manyArucos.png"
+# parser.add_argument("path_to_output_folder")
+# parser.add_argument("arg1")                     # "/dataset_task1"
+# parser.add_argument("arg2")
 
-args = vars(parser.parse_args())
+# args = vars(parser.parse_args())
 
-# # # For testing
-# # args = {
-# #   "task": "2"
-# # }
-
-# # args["task"] = "2"
+# For testing
+args = {
+  "task": ""
+}
+args["task"] = "3"
 
 
 if args["task"] == "1":
@@ -122,7 +121,7 @@ if args["task"] == "2":
         matches       = flann.knnMatch(des1,des2,k=2)
 
         # store all the good matches
-        good = [m for m,n in matches if (m.distance < 0.6*n.distance)]
+        good = [m for m,n in matches if (m.distance < 0.99*n.distance)]
 
         # Extract coordinates of matches found
         src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
@@ -133,14 +132,22 @@ if args["task"] == "2":
 
         '''
 
-        M, mask = cv2.findHomography(dst_pts, src_pts, cv2.RANSAC,5.0)
+        M, mask = cv2.findHomography(dst_pts, src_pts, cv2.RANSAC,8.0)
 
         tf_img = cv2.warpPerspective(img2, M, (img1.shape[1], img1.shape[0]))
 
         '''
-        Displaying inliners
+        Save image to output folder
 
         '''
+
+        path = args["path_to_output_folder"]        
+        cv2.imwrite(os.path.join(path , "tf_" + image_name), tf_img)
+
+        # '''
+        # Displaying inliners
+
+        # '''
 
         # matchesMask = mask.ravel().tolist()
         # h,w, d = img1.shape
@@ -153,26 +160,13 @@ if args["task"] == "2":
         # plt.imshow(img3, 'gray'),plt.show()
 
 
-        '''
-        Save image to output folder
-
-        '''
-
-        path = args["path_to_output_folder"]        
-        cv2.imwrite(os.path.join(path , "tf_" + image_name), tf_img)
-
 
 if args["task"] == "3":
-    pass
+    
+    img1 = cv2.imread(getcwd() + "dataset_task3_1/rgb_0586.jpg")
+    img2 = cv2.imread(getcwd() + "dataset_task3_2/rgb_0863.jpg")
+
 
 
 if args["task"] == "4":
     pass
-
-
-'''
-
-'''
-
-def save_image(img_name, img, path):
-    cv2.imwrite(os.path.join(path , "tf_" + img_name), img)
