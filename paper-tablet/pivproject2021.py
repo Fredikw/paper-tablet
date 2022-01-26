@@ -20,9 +20,9 @@ Command line arguments
 '''
 parser = ArgumentParser()
 parser.add_argument("task")
-parser.add_argument("path_to_template")         # "templates/template1_manyArucos.png"
+parser.add_argument("path_to_template")
 parser.add_argument("path_to_output_folder")
-parser.add_argument("arg1")                     # "/dataset_task1"
+parser.add_argument("arg1")
 parser.add_argument("arg2")
 
 args = vars(parser.parse_args())
@@ -225,6 +225,5 @@ if args["task"] == "3":
         cv2.imwrite(os.path.join(path , to_be_saved_name), to_be_saved)
 
 # # for testing
-
 if args["task"] == "4":
     pass
