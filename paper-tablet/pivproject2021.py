@@ -12,28 +12,28 @@ from skimage.metrics import structural_similarity as compare_ssim
 # # Run the command
 # # $python .\pivproject2021.py 1 "/templates/template1_manyArucos.png" "output_folder" "/dataset_task1" 4
 # # $python .\pivproject2021.py 2 "/templates/template2_fewArucos.png" "output_folder" "/dataset_task2" 4
+# # $python .\pivproject2021.py 3 "/templates/template2_fewArucos.png" "output_folder_task3" "/dataset_task3_1" "/dataset_task3_2"
 
 '''
 Command line arguments
 
 '''
 
-# parser = ArgumentParser()
-# parser.add_argument("task")
-# parser.add_argument("path_to_template")         # "templates/template1_manyArucos.png"
-# parser.add_argument("path_to_output_folder")
-# parser.add_argument("arg1")                     # "/dataset_task1"
-# parser.add_argument("arg2")
+parser = ArgumentParser()
+parser.add_argument("task")
+parser.add_argument("path_to_template")         # "templates/template1_manyArucos.png"
+parser.add_argument("path_to_output_folder")
+parser.add_argument("arg1")                     # "/dataset_task1"
+parser.add_argument("arg2")
 
-# args = vars(parser.parse_args())
+args = vars(parser.parse_args())
 
-# For testing, comment out line 21-26
-args = {
-  "task": "",
-  "path_to_output_folder" : ""
-}
-args["task"] = "4"
-
+# # For testing
+# args = {
+#   "task": "",
+#   "path_to_output_folder" : ""
+# }
+# args["task"] = "4"
 
 if args["task"] == "1":
 
@@ -41,7 +41,6 @@ if args["task"] == "1":
     Read rgb images
 
     '''
-
     img1 = cv2.imread(getcwd() + args["path_to_template"])
 
     img_folder = args["arg1"]
@@ -54,7 +53,6 @@ if args["task"] == "1":
         Find corresponding ArUco markers in images
 
         '''
-
         # Defining ArUco dictionary and parameters used for detection
         aruco_dict  = cv2.aruco.Dictionary_get(cv2.aruco.DICT_7X7_50)
         arucoParams = cv2.aruco.DetectorParameters_create()
@@ -72,7 +70,6 @@ if args["task"] == "1":
         Find homography between images
 
         '''
-
         M, mask = cv2.findHomography(srcpts, destpts)
 
         # Transforming input image
@@ -82,7 +79,6 @@ if args["task"] == "1":
         Displaying images
 
         '''
-
         # cv2.imshow('frame', img2)
         # cv2.imshow('frame1', tf_img)
         # cv2.waitKey(0)
@@ -91,7 +87,6 @@ if args["task"] == "1":
         Save image to output folder
 
         '''
-
         path = args["path_to_output_folder"]        
         cv2.imwrite(os.path.join(path , "tf_" + image_name), tf_img)
 
@@ -110,7 +105,6 @@ if args["task"] == "2":
         Keypoint detection
 
         '''
-
         sift = cv2.SIFT_create()
 
         kp1, des1 = sift.detectAndCompute(img1,None)
@@ -133,7 +127,6 @@ if args["task"] == "2":
         Find homography between images
 
         '''
-
         M, mask = cv2.findHomography(dst_pts, src_pts, cv2.RANSAC,5.0)
 
         tf_img = cv2.warpPerspective(img2, M, (img1.shape[1], img1.shape[0]))
@@ -142,7 +135,6 @@ if args["task"] == "2":
         Save image to output folder
 
         '''
-
         path = args["path_to_output_folder"]        
         cv2.imwrite(os.path.join(path , "tf_" + image_name), tf_img)
 
@@ -171,8 +163,8 @@ if args["task"] == "3":
     img_temp         = cv2.imread(getcwd() + "/templates/template2_fewArucos.png") # = cv2.imread(getcwd() + args["path_to_template"])
     img_temp_gray    = cv2.cvtColor(img_temp, cv2.COLOR_BGR2GRAY)
 
-    img1_folder = "/FewArucos-Viewpoint1_images"#= args["arg1"]
-    img2_folder = "/FewArucos-Viewpoint2_images"#= args["arg2"]
+    img1_folder = args["arg1"] #= "/FewArucos-Viewpoint1_images"
+    img2_folder = args["arg2"] #= "/FewArucos-Viewpoint2_images"
 
     for image1_name, image2_name in zip(listdir(getcwd() + img1_folder), listdir(getcwd() + img2_folder)):
 
@@ -231,20 +223,10 @@ if args["task"] == "3":
             to_be_saved_name = image2_name
         
         # Define image name
-        path = "output_folder3" # = args["path_to_output_folder"]
+        path = args["path_to_output_folder"] #= "output_folder3" 
         cv2.imwrite(os.path.join(path , to_be_saved_name), to_be_saved)
 
+# # for testing
+
 if args["task"] == "4":
-
-    frameSize = (500, 500)
-    import glob
-
-
-    out = cv2.VideoWriter('output_video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 60, frameSize)
-    print("hei")
-    for filename in glob.glob('D:/output_folder3/*.jpg'):
-        img = cv2.imread(filename)
-        print("inside")
-        out.write(img)
-
-    out.release()
+    pass
