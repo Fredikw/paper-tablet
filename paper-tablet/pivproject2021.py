@@ -12,13 +12,12 @@ from skimage.metrics import structural_similarity as compare_ssim
 # # Run the command
 # # $python .\pivproject2021.py 1 "/templates/template1_manyArucos.png" "output_folder" "/dataset_task1" 4
 # # $python .\pivproject2021.py 2 "/templates/template2_fewArucos.png" "output_folder" "/dataset_task2" 4
-# # $python .\pivproject2021.py 3 "/templates/template2_fewArucos.png" "output_folder_task3" "/dataset_task3_1" "/dataset_task3_2"
+# # $python .\pivproject2021.py 3 "/templates/template2_fewArucos.png" "output_folder" "/dataset_task3_1" "/dataset_task3_2"
 
 '''
 Command line arguments
 
 '''
-
 parser = ArgumentParser()
 parser.add_argument("task")
 parser.add_argument("path_to_template")         # "templates/template1_manyArucos.png"
