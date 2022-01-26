@@ -1,6 +1,8 @@
-import numpy as np
 import cv2
 import os
+
+import numpy as np
+
 # Sort corners by id
 # id and courner correspond on index
 def sort_markers(ids, corners):
@@ -10,6 +12,7 @@ def sort_markers(ids, corners):
 		idx = ids.index([count])
 		lst.append(corners[idx])
 	return tuple(lst)
+
 
 # Input array of arrays
 # Returns single array
@@ -28,10 +31,6 @@ def format_detectMarkers_corners(corners):
     return arr
 
 
-def save_image(img_name, img, path):
-    cv2.imwrite(os.path.join(path , "tf_" + img_name), img)
-
-
 def get_keypoints(img1, img2):
     
     sift = cv2.SIFT_create()
@@ -40,6 +39,7 @@ def get_keypoints(img1, img2):
     kp2, des2 = sift.detectAndCompute(img2,None)
 
     return kp1, des1, kp2, des2
+
 
 def get_matching_pints(kp1, des1, kp2, des2):
 
@@ -55,7 +55,7 @@ def get_matching_pints(kp1, des1, kp2, des2):
     src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
     dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
 
-    return src_pts, dst_pts 
+    return src_pts, dst_pts
 
 
 def task2(img_temp, img1):
