@@ -32,7 +32,7 @@ args = {
   "task": "",
   "path_to_output_folder" : ""
 }
-args["task"] = "3"
+args["task"] = "4"
 
 
 if args["task"] == "1":
@@ -167,64 +167,84 @@ Approach based on ...
 '''
 
 if args["task"] == "3":
-    
-    img_temp = cv2.imread(getcwd() + "/templates/template2_fewArucos.png")
-    img1     = cv2.imread(getcwd() + "/dataset_task3_1/rgb_0586.jpg")
-    img2     = cv2.imread(getcwd() + "/dataset_task3_2/rgb_0863.jpg")
 
-    tf_img1 = utils.task2(img_temp, img1)
-    tf_img2 = utils.task2(img_temp, img2)
+    img_temp         = cv2.imread(getcwd() + "/templates/template2_fewArucos.png") # = cv2.imread(getcwd() + args["path_to_template"])
+    img_temp_gray    = cv2.cvtColor(img_temp, cv2.COLOR_BGR2GRAY)
 
-    '''
-    Converting to gray scale image
+    img1_folder = "/FewArucos-Viewpoint1_images"#= args["arg1"]
+    img2_folder = "/FewArucos-Viewpoint2_images"#= args["arg2"]
 
-    '''
-    img_temp    = cv2.cvtColor(img_temp, cv2.COLOR_BGR2GRAY)
-    gray_img_1  = cv2.cvtColor(tf_img1, cv2.COLOR_BGR2GRAY)
-    gray_img_2  = cv2.cvtColor(tf_img2, cv2.COLOR_BGR2GRAY)
+    for image1_name, image2_name in zip(listdir(getcwd() + img1_folder), listdir(getcwd() + img2_folder)):
 
-    '''
-    Normalize image
+        img1 = cv2.imread(getcwd() + img1_folder + "/" + image1_name)
+        img2 = cv2.imread(getcwd() + img2_folder + "/" + image2_name)
 
-    '''
-    gray_img_1_norm = np.zeros((img_temp.shape[0],img_temp.shape[1]))
-    gray_img_2_norm = np.zeros((img_temp.shape[0],img_temp.shape[1]))
+        tf_img1 = utils.task2(img_temp, img1)
+        tf_img2 = utils.task2(img_temp, img2)
 
-    gray_img_1_norm = cv2.normalize(gray_img_1, gray_img_1_norm, 0, 255, cv2.NORM_MINMAX)
-    gray_img_2_norm = cv2.normalize(gray_img_2, gray_img_2_norm, 0, 255, cv2.NORM_MINMAX)
+        '''
+        Converting to gray scale image
+
+        '''
+        gray_img_1  = cv2.cvtColor(tf_img1, cv2.COLOR_BGR2GRAY)
+        gray_img_2  = cv2.cvtColor(tf_img2, cv2.COLOR_BGR2GRAY)
+
+        '''
+        Normalize image
+
+        '''
+        gray_img_1_norm = np.zeros((img_temp.shape[0],img_temp.shape[1]))
+        gray_img_2_norm = np.zeros((img_temp.shape[0],img_temp.shape[1]))
+
+        gray_img_1_norm = cv2.normalize(gray_img_1, gray_img_1_norm, 0, 255, cv2.NORM_MINMAX)
+        gray_img_2_norm = cv2.normalize(gray_img_2, gray_img_2_norm, 0, 255, cv2.NORM_MINMAX)
 
 
-    '''
-    Comparing images
-    
-    '''
-    # # Comparing images using Structural Similarity Index (SSIM)
-    # score_img1, diff_img1 = compare_ssim(img_temp, gray_img_1, full=True)
-    # score_img2, diff_img2 = compare_ssim(img_temp, gray_img_2, full=True)
+        '''
+        Comparing images
+        
+        '''
+        # # Comparing images using Structural Similarity Index (SSIM)
+        # score_img1, diff_img1 = compare_ssim(img_temp, gray_img_1, full=True)
+        # score_img2, diff_img2 = compare_ssim(img_temp, gray_img_2, full=True)
 
-    # print("SSIM: {}".format(score_img1))
-    # print("SSIM: {}".format(score_img2))
+        # print("SSIM: {}".format(score_img1))
+        # print("SSIM: {}".format(score_img2))
 
-    # # Comparing images using Mean Squared Error
-    err1 = np.sum((gray_img_1_norm.astype("float") - img_temp.astype("float")) ** 2)
-    err1 /= float(gray_img_1_norm.shape[0] * gray_img_1_norm.shape[1])
+        # # Comparing images using Mean Squared Error
+        err1 = np.sum((gray_img_1_norm.astype("float") - img_temp_gray.astype("float")) ** 2)
+        err1 /= float(gray_img_1_norm.shape[0] * gray_img_1_norm.shape[1])
 
-    err2 = np.sum((gray_img_2_norm.astype("float") - img_temp.astype("float")) ** 2)
-    err2 /= float(gray_img_2_norm.shape[0] * gray_img_2_norm.shape[1])
+        err2 = np.sum((gray_img_2_norm.astype("float") - img_temp_gray.astype("float")) ** 2)
+        err2 /= float(gray_img_2_norm.shape[0] * gray_img_2_norm.shape[1])
 
-    print(err1)
-    print(err2)
+        '''
+        Save images
 
-    '''
-    Save images
+        '''
 
-    '''
+        if err1 < err2:
+            to_be_saved      = tf_img1
+            to_be_saved_name = image1_name
+        else:
+            to_be_saved      = tf_img2
+            to_be_saved_name = image2_name
+        
+        # Define image name
+        path = "output_folder3" # = args["path_to_output_folder"]
+        cv2.imwrite(os.path.join(path , to_be_saved_name), to_be_saved)
 
-    # if err1 < err2:
-    #     to_be_saved = tf_img1
-    # else:
-    #     to_be_saved = tf_img2
-    
-    # # Define image name
-    # path = args["path_to_output_folder"] # = "output_folder3"
-    # cv2.imwrite(os.path.join(path , image_name), to_be_saved)
+if args["task"] == "4":
+
+    frameSize = (500, 500)
+    import glob
+
+
+    out = cv2.VideoWriter('output_video.avi',cv2.VideoWriter_fourcc(*'DIVX'), 60, frameSize)
+    print("hei")
+    for filename in glob.glob('D:/output_folder3/*.jpg'):
+        img = cv2.imread(filename)
+        print("inside")
+        out.write(img)
+
+    out.release()
