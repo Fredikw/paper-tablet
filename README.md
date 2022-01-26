@@ -5,6 +5,8 @@ transformation between the paper and the camera, correct the perspective and gen
 the camera was viewing the paper from the top. Furthermore, the output image must be cropped
 showing nothing else than the paper.
 
+Note: task 3 is removed from the project. Task 4 will hereinafter be referred to as task 3.
+
 ###### Resources
 https://www.educba.com/opencv-perspectivetransform/
 
