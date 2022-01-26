@@ -159,7 +159,7 @@ Approach based on ...
 
 if args["task"] == "3":
 
-    img_temp         = cv2.imread(getcwd() + "/templates/template2_fewArucos.png") # = cv2.imread(getcwd() + args["path_to_template"])
+    img_temp         = cv2.imread(getcwd() + args["path_to_template"])
     img_temp_gray    = cv2.cvtColor(img_temp, cv2.COLOR_BGR2GRAY)
 
     img1_folder = args["arg1"] #= "/FewArucos-Viewpoint1_images"
