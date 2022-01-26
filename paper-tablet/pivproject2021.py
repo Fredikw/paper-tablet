@@ -214,7 +214,6 @@ if args["task"] == "3":
         Save images
 
         '''
-
         if err1 < err2:
             to_be_saved      = tf_img1
             to_be_saved_name = image1_name
