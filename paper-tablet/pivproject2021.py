@@ -158,11 +158,7 @@ if args["task"] == "2":
         # img3 = cv2.drawMatches(img1,kp1,img2,kp2,good,None,**draw_params)
         # plt.imshow(img3, 'gray'),plt.show()
 
-'''
-Approach based on ...
-
-'''
-
+        
 if args["task"] == "3":
 
     img_temp         = cv2.imread(getcwd() + args["path_to_template"])
