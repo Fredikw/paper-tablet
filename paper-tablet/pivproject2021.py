@@ -14,11 +14,13 @@ from skimage.metrics import structural_similarity as compare_ssim
 # # $python .\pivproject2021.py 2 "/templates/template2_fewArucos.png" "output_folder" "/dataset_task2" 4
 # # $python .\pivproject2021.py 3 "/templates/template2_fewArucos.png" "output_folder" "/dataset_task3_1" "/dataset_task3_2"
 
+
 '''
 Command line arguments
 
 '''
 parser = ArgumentParser()
+
 parser.add_argument("task")
 parser.add_argument("path_to_template")
 parser.add_argument("path_to_output_folder")
@@ -92,6 +94,10 @@ if args["task"] == "1":
 
 if args["task"] == "2":
 
+    '''
+    Read rgb images
+
+    '''
     img1 = cv2.imread(getcwd() + args["path_to_template"])
 
     img_folder = args["arg1"]
@@ -101,7 +107,7 @@ if args["task"] == "2":
         img2 = cv2.imread(getcwd() + img_folder + "/" + image_name)
 
         '''
-        Keypoint detection
+        Keypoint detection and matching
 
         '''
         sift = cv2.SIFT_create()
@@ -115,8 +121,8 @@ if args["task"] == "2":
         flann         = cv2.FlannBasedMatcher(index_params, search_params)
         matches       = flann.knnMatch(des1,des2,k=2)
 
-        # store all the good matches
-        good = [m for m,n in matches if (m.distance < 0.9*n.distance)]
+        # Get best matches
+        good = utils.get_good_matches(matches)
 
         # Extract coordinates of matches found
         src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
