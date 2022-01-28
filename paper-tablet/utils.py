@@ -50,7 +50,7 @@ def get_matching_pints(kp1, des1, kp2, des2):
     matches       = flann.knnMatch(des1,des2,k=2)
 
     # store all the good matches
-    good = [m for m,n in matches if (m.distance < 0.99*n.distance)]
+    good = get_good_matches(matches)
 
     src_pts = np.float32([ kp1[m.queryIdx].pt for m in good ]).reshape(-1,1,2)
     dst_pts = np.float32([ kp2[m.trainIdx].pt for m in good ]).reshape(-1,1,2)
@@ -68,3 +68,14 @@ def task2(img_temp, img1):
     tf_img = cv2.warpPerspective(img1, M, (img_temp.shape[1], img_temp.shape[0]))
 
     return tf_img
+
+
+def get_good_matches(matches, threshold = 0.4, MIN_NUMBER_OF_CORR = 20):
+
+    good_matches = [m for m,n in matches if (m.distance < threshold * n.distance)]
+
+    if len(good_matches) < MIN_NUMBER_OF_CORR:
+        
+        good_matches = get_good_matches(matches, threshold + 0.1)
+
+    return good_matches
