@@ -3,6 +3,11 @@ import os
 
 import numpy as np
 
+# Display image
+def view_image(img):
+    cv2.imshow('frame', img)
+    cv2.waitKey(0)
+
 # Sort corners by id
 # id and courner correspond on index
 def sort_markers(ids, corners):
