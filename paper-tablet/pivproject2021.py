@@ -1,12 +1,11 @@
-import cv2
-import utils
 import os
 import numpy as np
+import cv2
+import utils
 
 from os import listdir, getcwd
 from argparse import ArgumentParser
 from matplotlib import pyplot as plt
-from skimage.metrics import structural_similarity as compare_ssim
 
 
 # # Run the command
@@ -75,14 +74,6 @@ if args["task"] == "1":
 
         # Transforming input image
         tf_img = cv2.warpPerspective(img2, M, (img1.shape[1], img1.shape[0]))
-
-        '''
-        Displaying images
-
-        '''
-        # cv2.imshow('frame', img2)
-        # cv2.imshow('frame1', tf_img)
-        # cv2.waitKey(0)
 
         '''
         Save image to output folder
@@ -202,8 +193,10 @@ if args["task"] == "3":
         
         '''
         # # Comparing images using Structural Similarity Index (SSIM)
-        # score_img1, diff_img1 = compare_ssim(img_temp, gray_img_1, full=True)
-        # score_img2, diff_img2 = compare_ssim(img_temp, gray_img_2, full=True)
+        # from skimage.metrics import structural_similarity
+
+        # score_img1, diff_img1 = structural_similarity(img_temp, gray_img_1, full=True)
+        # score_img2, diff_img2 = structural_similarity(img_temp, gray_img_2, full=True)
 
         # print("SSIM: {}".format(score_img1))
         # print("SSIM: {}".format(score_img2))
